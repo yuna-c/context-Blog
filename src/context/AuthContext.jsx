@@ -8,32 +8,32 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 로그인 상태 확인
-    const fetchSession = async () => {
+    const getSession = async () => {
       const {
         data: { session },
         error
       } = await supabase.auth.getSession();
 
-      console.log(`session =>`, session);
-      if (error) console.error('세션 불러오기 실패', error);
+      if (error) {
+        console.error('세션 가져오기 오류:', error);
+        return;
+      }
+
       setUser(session?.user ?? null);
       setLoading(false);
     };
 
-    fetchSession();
+    getSession();
 
-    // 로그인/로그아웃 등 인증 상태 변화 감지
     const {
-      data: { subscription }
+      data: { authListener }
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
-    // 컴포넌트가 꺼질 때 리스너 해제
     return () => {
-      subscription?.unsubscribe();
+      authListener?.subscription.unsubscribe();
     };
   }, []);
 

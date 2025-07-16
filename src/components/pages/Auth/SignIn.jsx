@@ -3,14 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useRef, useState } from 'react';
 import { useAuthContext } from '../../../context/AuthContext';
 
-function SignUp() {
+function SignIn() {
   const navigate = useNavigate();
   const emailRef = useRef();
   const passwordRef = useRef();
   const [_, setError] = useState(null);
   const [message, setMessage] = useState('');
 
-  const { signUp } = useAuthContext();
+  const { signIn } = useAuthContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,35 +18,27 @@ function SignUp() {
     const password = passwordRef.current.value;
     console.log(email, password);
 
-    const { data, error } = await signUp({ email, password });
+    const { data, error } = await signIn({ email, password });
 
     if (error) {
       setError(error);
       setMessage('메일주소 또는 비밀번호가 잘못되었습니다.');
-      console.error('회원가입 실패', error);
+      console.error('로그인 실패', error);
     } else {
-      console.log('회원가입 성공', data);
+      console.log('로그인 성공', data);
     }
-
-    navigate('/signin');
+    navigate('/');
   };
 
   return (
     <div className="text-center form-auth">
       <form onSubmit={handleSubmit} className="form-signin">
-        <h1 className="h3 mb-3 font-weight-normal">Please sign up</h1>
-        <label htmlFor="inputEmail" className="sr-only">
-          Email address
-        </label>
+        <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
 
-        <input
-          ref={emailRef}
-          type="email"
-          id="inputEmail"
-          className="form-control"
-          placeholder="Email address"
-          required
-        />
+        <label htmlFor="inputEmail" className="sr-only">
+          Email
+        </label>
+        <input ref={emailRef} type="email" id="inputEmail" className="form-control" placeholder="Email address" />
         <label htmlFor="inputPassword" className="sr-only">
           Password
         </label>
@@ -63,16 +55,18 @@ function SignUp() {
             <input type="checkbox" defaultValue="remember-me" /> Remember me
           </label>
         </div>
-        <button className="btn btn-lg btn-primary btn-block" type="submit">
-          Sign up
-        </button>
-        <Link to="/login" className="btn btn-lg btn-primary btn-block">
-          Login
-        </Link>
+        <div>
+          <button className="btn btn-lg btn-primary btn-block" type="submit">
+            Sign in
+          </button>
+          <Link to="/signup" className="btn btn-lg btn-primary btn-block">
+            Sign up
+          </Link>
+        </div>
       </form>
       {message ? <p>{message}</p> : ''}
     </div>
   );
 }
 
-export default SignUp;
+export default SignIn;

@@ -1,6 +1,17 @@
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../../context/AuthContext';
 
 function Nav() {
+  const navigate = useNavigate();
+  const { user, signOut } = useAuthContext();
+
+  const handleSignOut = async () => {
+    await signOut();
+    console.log('로그아웃 성공');
+    navigate('/');
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light" id="mainNav">
       <div className="container px-4 px-lg-5">
@@ -22,24 +33,35 @@ function Nav() {
         <div className="collapse navbar-collapse " id="navbarResponsive">
           <ul className="navbar-nav ms-auto py-4 py-lg-0">
             <li className="nav-item">
-              <a className="nav-link px-lg-3 py-3 py-lg-4" href="index.html">
+              <Link to="/" className="nav-link px-lg-3 py-3 py-lg-4">
                 Home
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link px-lg-3 py-3 py-lg-4" href="about.html">
+              <Link to="/" className="nav-link px-lg-3 py-3 py-lg-4">
                 About
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link px-lg-3 py-3 py-lg-4" href="post.html">
+              <Link to="/" className="nav-link px-lg-3 py-3 py-lg-4">
                 Sample Post
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link px-lg-3 py-3 py-lg-4" href="contact.html">
+              <Link to="/" className="nav-link px-lg-3 py-3 py-lg-4">
                 Contact
-              </a>
+              </Link>
+            </li>
+            <li className="nav-item">
+              {user ? (
+                <a href="#" onClick={handleSignOut} className="nav-link px-lg-3 py-3 py-lg-4">
+                  SignOut
+                </a>
+              ) : (
+                <Link to="/signin" className="nav-link px-lg-3 py-3 py-lg-4">
+                  SignIn
+                </Link>
+              )}
             </li>
           </ul>
         </div>
