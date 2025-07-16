@@ -15,9 +15,9 @@ function Nav() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light" id="mainNav">
       <div className="container px-4 px-lg-5">
-        <a className="navbar-brand" href="index.html">
+        <Link className="navbar-brand" to="/">
           Context Blog
-        </a>
+        </Link>
         <button
           className="navbar-toggler"
           type="button"
@@ -37,32 +37,26 @@ function Nav() {
                 Home
               </Link>
             </li>
-            <li className="nav-item">
-              <Link to="/" className="nav-link px-lg-3 py-3 py-lg-4">
-                About
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/" className="nav-link px-lg-3 py-3 py-lg-4">
-                Sample Post
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/" className="nav-link px-lg-3 py-3 py-lg-4">
-                Contact
-              </Link>
-            </li>
-            <li className="nav-item">
-              {user ? (
-                <a href="#" onClick={handleSignOut} className="nav-link px-lg-3 py-3 py-lg-4">
-                  SignOut
-                </a>
-              ) : (
+            {user ? (
+              <>
+                <li className="nav-item">
+                  <Link to="/addpost" className="nav-link px-lg-3 py-3 py-lg-4">
+                    Add Post
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <a href="#" onClick={handleSignOut} className="nav-link px-lg-3 py-3 py-lg-4">
+                    SignOut
+                  </a>
+                </li>
+              </>
+            ) : (
+              <li className="nav-item">
                 <Link to="/signin" className="nav-link px-lg-3 py-3 py-lg-4">
                   SignIn
                 </Link>
-              )}
-            </li>
+              </li>
+            )}
           </ul>
         </div>
       </div>

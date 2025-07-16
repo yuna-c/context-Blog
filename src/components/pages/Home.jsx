@@ -1,8 +1,30 @@
 import home from '../../assets/images/home-bg.jpg';
 import Nav from '../layouts/Nav';
 import Footer from '../layouts/Footer';
+import { useEffect, useState } from 'react';
+import supabase from '../../supabase/SupabaseClient';
+import { Link } from 'react-router-dom';
 
 function Home() {
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data, error, status } = await supabase.from('posts').select('*');
+        if (error && status !== 406) {
+          console.log(`데이터를 가져오는 중 오류 발생: ${error}`);
+          throw error;
+        }
+        console.log(data);
+        setData(data);
+      } catch (error) {
+        console.error(`데이터를 가져오는 중 오류 발생: ${error.message}`);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <>
       <Nav />
@@ -24,66 +46,24 @@ function Home() {
         <div className="row gx-4 gx-lg-5 justify-content-center">
           <div className="col-md-10 col-lg-8 col-xl-7">
             {/* Post preview */}
-            <div className="post-preview">
-              <a href="post.html">
-                <h2 className="post-title">Man must explore, and this is exploration at its greatest</h2>
-                <h3 className="post-subtitle">Problems look mighty small from 150 miles up</h3>
-              </a>
-              <p className="post-meta">
-                Posted by
-                <a href="#!">Start Bootstrap</a>
-                on September 24, 2023
-              </p>
-            </div>
+            {data?.map((post) => {
+              return (
+                <div className="post-preview" key={post.id}>
+                  <Link to={`/singlepost/${post.id}`}>
+                    <h2 className="post-title">{post.title}</h2>
+                    <h3 className="post-subtitle">{post.description}</h3>
+                  </Link>
+                  <p className="post-meta">
+                    Posted by
+                    <a href="#!">Start Bootstrap</a>
+                    on September 24, 2023
+                  </p>
+                </div>
+              );
+            })}
             {/* Divider */}
             <hr className="my-4" />
-            {/* Post preview */}
-            <div className="post-preview">
-              <a href="post.html">
-                <h2 className="post-title">
-                  I believe every human has a finite number of heartbeats. I don't intend to waste any of mine.
-                </h2>
-              </a>
-              <p className="post-meta">
-                Posted by
-                <a href="#!">Start Bootstrap</a>
-                on September 18, 2023
-              </p>
-            </div>
-            {/* Divider */}
-            <hr className="my-4" />
-            {/* Post preview */}
-            <div className="post-preview">
-              <a href="post.html">
-                <h2 className="post-title">Science has not yet mastered prophecy</h2>
-                <h3 className="post-subtitle">
-                  We predict too much for the next year and yet far too little for the next ten.
-                </h3>
-              </a>
-              <p className="post-meta">
-                Posted by
-                <a href="#!">Start Bootstrap</a>
-                on August 24, 2023
-              </p>
-            </div>
-            {/* Divider */}
-            <hr className="my-4" />
-            {/* Post preview */}
-            <div className="post-preview">
-              <a href="post.html">
-                <h2 className="post-title">Failure is not an option</h2>
-                <h3 className="post-subtitle">
-                  Many say exploration is part of our destiny, but it’s actually our duty to future generations.
-                </h3>
-              </a>
-              <p className="post-meta">
-                Posted by
-                <a href="#!">Start Bootstrap</a>
-                on July 8, 2023
-              </p>
-            </div>
-            {/* Divider */}
-            <hr className="my-4" />
+
             {/* Pager */}
             <div className="d-flex justify-content-end mb-4">
               <a className="btn btn-primary text-uppercase" href="#!">
